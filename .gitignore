@@ -1,0 +1,4 @@
+# dirs
+.cache
+.coverage
+.coveragerc
