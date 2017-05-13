@@ -2,3 +2,4 @@
 .cache
 .coverage
 .coveragerc
+__pycache__
