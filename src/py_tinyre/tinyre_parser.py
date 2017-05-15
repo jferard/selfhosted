@@ -19,10 +19,14 @@
 from py_tinyre.constants import *
 
 class TinyREParser():
+    def parse(self, tokens):
+        return _TinyREParserFor(tokens).nodes()
+
+class _TinyREParserFor():
     def __init__(self, tokens):
         self.__tokens = tokens
 
-    def parse(self):
+    def nodes(self):
         self.__i = 0
         self.__l = []
         while self.__i+1<len(self.__tokens):
@@ -57,6 +61,6 @@ class TinyREParser():
 
     def __try_parse_last(self):
         if self.__i<len(self.__tokens):
-            token = tokens[self.__i]
+            token = self.__tokens[self.__i]
             self.__check_first_token(token)
             self.__l.append((ONE, token))

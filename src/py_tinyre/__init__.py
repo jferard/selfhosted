@@ -15,3 +15,17 @@
 
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>."""
+
+from py_tinyre.tinyre_matcher import *
+from py_tinyre.tinyre_lexer import *
+from py_tinyre.tinyre_parser import *
+from py_tinyre.tinyre_compiler import *
+from py_tinyre.constants import *
+
+class TinyRE():
+   def __init__(self, pattern):
+       matchers = TinyRECompiler().compile(TinyREParser().parse(TinyRELexer().tokenize(pattern)))
+       self.__matcher = TinyREMatcher(matchers)
+
+   def accept(self, c):
+       return self.__matcher.accept(c)

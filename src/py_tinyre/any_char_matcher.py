@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Self Hosted - A Self Hosted compiler project
       Copyright (C) 2017 J. Férard <https://github.com/jferard>
 
@@ -18,6 +17,14 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>."""
 from py_tinyre.constants import *
 
-class TinyRE():
-    """TODO"""
-    pass
+class AnyCharMatcher():
+    @staticmethod
+    def matcher():
+        try:
+            AnyCharMatcher.__matcher
+        except:
+            AnyCharMatcher.__matcher = AnyCharMatcher()
+        return AnyCharMatcher.__matcher
+
+    def match(self, c):
+        return True

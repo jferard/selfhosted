@@ -19,28 +19,21 @@
 import unittest
 import env
 from py_tinyre.constants import *
-from py_tinyre.tinyre_lexer import TinyRELexer
+from py_tinyre.char_collection_lexer import *
 
-class TestTinyRELexer(unittest.TestCase):
-    def test(self):
-        self.assertEqual([
-            (CHAR_COLLECTION, "a-z"),
-            (GLOB, "*"),
-            (ANY_CHAR, "\0"),
-            (GLOB, "+")
-        ], TinyRELexer().tokenize("[a-z]*.+"))
+class TestCharCollectionLexer(unittest.TestCase):
+    def setUp(self):
+        self.lexer = CharCollectionLexer()
 
-    def testPattern(self):
-        self.assertEqual([
-            (CHAR_COLLECTION, "p"),
-            (CHAR_COLLECTION, "a"),
-            (CHAR_COLLECTION, "t"),
-            (CHAR_COLLECTION, "t"),
-            (CHAR_COLLECTION, "e"),
-            (CHAR_COLLECTION, "r"),
-            (CHAR_COLLECTION, "n"),
-        ], TinyRELexer().tokenize("[p][a][t][t][e][r][n]"))
+    def testSimple(self):
+        self.assertEqual([(ONE_CHAR, 'a'), (CHAR_RANGE, ('b', 'q')), (ONE_CHAR, 'z')], self.lexer.tokenize("ab-qz"))
 
+    def testNeg(self):
+        self.assertEqual([(NEG, '\0'), (ONE_CHAR, 'a'), (CHAR_RANGE, ('b', 'q')), (ONE_CHAR, 'z')], self.lexer.tokenize("^ab-qz"))
+
+    def testDash(self):
+        self.assertEqual([(ONE_CHAR, '-'), (ONE_CHAR, 'a'), (CHAR_RANGE, ('b', 'q')), (ONE_CHAR, 'z')], self.lexer.tokenize("-ab-qz"))
+        self.assertEqual([(ONE_CHAR, 'a'), (CHAR_RANGE, ('b', 'q')), (ONE_CHAR, 'z'), (ONE_CHAR, '-')], self.lexer.tokenize("ab-qz-"))
 
 if __name__ == '__main__':
     unittest.main()

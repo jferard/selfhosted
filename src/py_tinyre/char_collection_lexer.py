@@ -17,45 +17,49 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>."""
 from py_tinyre.constants import *
 
-class CharCollectionParser():
+class CharCollectionLexer():
+    def tokenize(self, char_collection):
+        return _CharCollectionLexerFor(char_collection).tokens()
+
+class _CharCollectionLexerFor():
     """Take chars and build [not] [interval] [single]"""
     def __init__(self, char_collection):
         if len(char_collection) == 0:
             raise Exception()
         self.__char_collection = char_collection
 
-    def get_list(self):
+    def tokens(self):
         if len(self.__char_collection) == 1:
-            self.__list = [(ONE_CHAR, self.__char_collection[0])]
+            self.__tokens = [(ONE_CHAR, self.__char_collection[0])]
         else:
-            self.__get_list_from_some_ranges()
-        return self.__list
+            self.__get_tokens_from_some_ranges()
+        return self.__tokens
 
-    def __get_list_from_some_ranges(self):
+    def __get_tokens_from_some_ranges(self):
         self.__i = 0
-        self.__list = []
+        self.__tokens = []
         self.__process_head_chars()
         self.__process_tail_chars()
 
     def __process_head_chars(self):
         if self.__char_collection[self.__i] == '^':
-            self.__list.append((NEG, '\0'))
+            self.__tokens.append((NEG, '\0'))
             self.__i += 1
         if self.__char_collection[self.__i] == '-':
-            self.__list.append((ONE_CHAR, '-'))
+            self.__tokens.append((ONE_CHAR, '-'))
             self.__i += 1
 
     def __process_tail_chars(self):
         while self.__i<len(self.__char_collection):
             c = self.__char_collection[self.__i]
             if not self.__process_range(c):
-                self.__list.append((ONE_CHAR, c))
+                self.__tokens.append((ONE_CHAR, c))
             self.__i += 1
 
     def __process_range(self, begin_c):
         if self.__i+2 < len(self.__char_collection) and self.__char_collection[self.__i+1] == '-':
             end_c = self.__char_collection[self.__i+2]
-            self.__list.append((CHAR_RANGE, (begin_c, end_c)))
+            self.__tokens.append((CHAR_RANGE, (begin_c, end_c)))
             self.__i += 2
             return True
         else:

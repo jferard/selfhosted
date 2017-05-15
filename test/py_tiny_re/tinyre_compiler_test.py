@@ -19,18 +19,28 @@
 import unittest
 import env
 from py_tinyre.constants import *
-from py_tinyre.char_collection_parser import *
+from py_tinyre.tinyre_compiler import TinyRECompiler
+from py_tinyre.node_matcher import *
+from py_tinyre.tinyre_parser import TinyREParser
+from py_tinyre.tinyre_lexer import TinyRELexer
 
-class TestCharCollectionParser(unittest.TestCase):
-    def testSimple(self):
-        self.assertEqual([(ONE_CHAR, 'a'), (CHAR_RANGE, ('b', 'q')), (ONE_CHAR, 'z')], CharCollectionParser("ab-qz").get_list())
+class TestTinyRECompiler(unittest.TestCase):
+    def test(self):
+        nodes = [(ZERO_OR_MORE, (CHAR_COLLECTION, "a-z")), (ONE_OR_MORE, (ANY_CHAR, "\0"))]
+        matchers = TinyRECompiler().compile(nodes)
+        self.assertEquals(2, len(matchers))
+        self.assertEquals(ZeroOrMoreMatcher, type(matchers[0]))
+        self.assertEquals(OneOrMoreMatcher, type(matchers[1]))
 
-    def testNeg(self):
-        self.assertEqual([(NEG, '\0'), (ONE_CHAR, 'a'), (CHAR_RANGE, ('b', 'q')), (ONE_CHAR, 'z')], CharCollectionParser("^ab-qz").get_list())
+    def test2(self):
+        l = TinyRELexer()
+        p = TinyREParser()
+        c = TinyRECompiler()
+        re = c.compile(p.parse(l.tokenize("[p][a][t][t][e][r][n]")))
+        self.assertEquals(7, len(re))
+        for i in range(7):
+            self.assertEquals(OneMatcher, type(re[i]))
 
-    def testDash(self):
-        self.assertEqual([(ONE_CHAR, '-'), (ONE_CHAR, 'a'), (CHAR_RANGE, ('b', 'q')), (ONE_CHAR, 'z')], CharCollectionParser("-ab-qz").get_list())
-        self.assertEqual([(ONE_CHAR, 'a'), (CHAR_RANGE, ('b', 'q')), (ONE_CHAR, 'z'), (ONE_CHAR, '-')], CharCollectionParser("ab-qz-").get_list())
 
 if __name__ == '__main__':
     unittest.main()

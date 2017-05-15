@@ -16,10 +16,15 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>."""
 from py_tinyre.constants import *
+from py_tinyre.char_collection_lexer import CharCollectionLexer
 
 class CharCollectionMatcher():
     def __init__(self, tokens):
+        assert type(tokens) == list
         self.__tokens = tokens
+
+    def __str__(self):
+        return "CharCollectionMatcher({0})".format(self.__tokens)
 
     def match(self, c):
         self.__i = 0
@@ -39,10 +44,12 @@ class CharCollectionMatcher():
 
     def __match_token(self, c):
         token = self.__tokens[self.__i]
-        if token[0] == CHAR_RANGE:
+        if token[OP_CODE] == CHAR_RANGE:
             return self.__match_range(token[VALUE], c)
-        elif token[0] == ONE_CHAR:
-            return c == token[1]
+        elif token[OP_CODE] == ONE_CHAR:
+            return c == token[VALUE]
+        else:
+            raise Exception()
 
     def __match_range(self, ft, c):
         f, t = ft

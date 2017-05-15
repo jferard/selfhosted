@@ -23,10 +23,27 @@ from py_tinyre.tinyre_parser import TinyREParser
 
 class TestTinyREParser(unittest.TestCase):
     def test(self):
-        self.assertEqual(
-            [(ZERO_OR_MORE, (CHAR_COLLECTION, 'a-z')), (ONE_OR_MORE, (ANY_CHAR, '\0'))],
-            TinyREParser([(CHAR_COLLECTION, "a-z"), (GLOB, "*"), (ANY_CHAR, "\0"), (GLOB, "+")]).parse()
-        )
+        tokens = [
+            (CHAR_COLLECTION, "a-z"),
+            (GLOB, "*"),
+            (ANY_CHAR, "\0"),
+            (GLOB, "+")
+        ]
+        nodes = [(ZERO_OR_MORE, tokens[0]), (ONE_OR_MORE, tokens[2])]
+        self.assertEqual(nodes, TinyREParser().parse(tokens))
+
+    def testPattern(self):
+        tokens = [
+            (CHAR_COLLECTION, "p"),
+            (CHAR_COLLECTION, "a"),
+            (CHAR_COLLECTION, "t"),
+            (CHAR_COLLECTION, "t"),
+            (CHAR_COLLECTION, "e"),
+            (CHAR_COLLECTION, "r"),
+            (CHAR_COLLECTION, "n"),
+        ]
+        nodes = [(ONE, t) for t in tokens]
+        self.assertEqual(nodes, TinyREParser().parse(tokens))
 
 if __name__ == '__main__':
     unittest.main()

@@ -19,28 +19,18 @@
 import unittest
 import env
 from py_tinyre.constants import *
-from py_tinyre.tinyre_lexer import TinyRELexer
+from py_tinyre import *
 
-class TestTinyRELexer(unittest.TestCase):
+class TestTinyRE(unittest.TestCase):
     def test(self):
-        self.assertEqual([
-            (CHAR_COLLECTION, "a-z"),
-            (GLOB, "*"),
-            (ANY_CHAR, "\0"),
-            (GLOB, "+")
-        ], TinyRELexer().tokenize("[a-z]*.+"))
-
-    def testPattern(self):
-        self.assertEqual([
-            (CHAR_COLLECTION, "p"),
-            (CHAR_COLLECTION, "a"),
-            (CHAR_COLLECTION, "t"),
-            (CHAR_COLLECTION, "t"),
-            (CHAR_COLLECTION, "e"),
-            (CHAR_COLLECTION, "r"),
-            (CHAR_COLLECTION, "n"),
-        ], TinyRELexer().tokenize("[p][a][t][t][e][r][n]"))
-
+        re = TinyRE("[p][a][t][t][e][r][n]")
+        self.assertEquals(NEXT_CHAR, re.accept("p"))
+        self.assertEquals(NEXT_CHAR, re.accept("a"))
+        self.assertEquals(NEXT_CHAR, re.accept("t"))
+        self.assertEquals(NEXT_CHAR, re.accept("t"))
+        self.assertEquals(NEXT_CHAR, re.accept("e"))
+        self.assertEquals(NEXT_CHAR, re.accept("r"))
+        self.assertEquals(SUCCESS, re.accept("n"))
 
 if __name__ == '__main__':
     unittest.main()

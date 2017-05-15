@@ -28,6 +28,12 @@ class TestCharCollectionMatcher(unittest.TestCase):
         self.assertTrue(c.match('b'))
         self.assertFalse(c.match('c'))
 
+    def testOneChar(self):
+        c = CharCollectionMatcher([(ONE_CHAR, 'p')])
+        self.assertTrue(c.match('p'))
+        self.assertFalse(c.match('b'))
+        self.assertFalse(c.match('c'))
+
     def testRange(self):
         c = CharCollectionMatcher([(CHAR_RANGE, ('a', 'z'))])
         self.assertTrue(c.match('a'))

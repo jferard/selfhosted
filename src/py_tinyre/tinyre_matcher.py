@@ -16,31 +16,28 @@
 
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>."""
-import unittest
-import env
 from py_tinyre.constants import *
-from py_tinyre.tinyre_lexer import TinyRELexer
 
-class TestTinyRELexer(unittest.TestCase):
-    def test(self):
-        self.assertEqual([
-            (CHAR_COLLECTION, "a-z"),
-            (GLOB, "*"),
-            (ANY_CHAR, "\0"),
-            (GLOB, "+")
-        ], TinyRELexer().tokenize("[a-z]*.+"))
+class TinyREMatcher():
+    def __init__(self, matchers):
+        self.__matchers = matchers
+        self.__i = 0
 
-    def testPattern(self):
-        self.assertEqual([
-            (CHAR_COLLECTION, "p"),
-            (CHAR_COLLECTION, "a"),
-            (CHAR_COLLECTION, "t"),
-            (CHAR_COLLECTION, "t"),
-            (CHAR_COLLECTION, "e"),
-            (CHAR_COLLECTION, "r"),
-            (CHAR_COLLECTION, "n"),
-        ], TinyRELexer().tokenize("[p][a][t][t][e][r][n]"))
+    def accept(self, c):
+        cur_matcher = self.__matchers[self.__i]
+        state = cur_matcher.accept(c)
+        while state == SKIP_MATCHER:
+            self.__i += 1
+            if self.__i == len(self.__matchers):
+                return SUCCESS
+            cur_matcher = self.__matchers[self.__i]
+            state = cur_matcher.accept(c)
 
+        if state == FAIL:
+            return FAIL
+        if state == NEXT_MATCHER_AND_CHAR:
+            self.__i += 1
+            if self.__i == len(self.__matchers):
+                return SUCCESS
 
-if __name__ == '__main__':
-    unittest.main()
+        return NEXT_CHAR

@@ -19,6 +19,10 @@
 from py_tinyre.constants import *
 
 class TinyRELexer():
+    def tokenize(self, pattern):
+        return _TinyRELexerFor(pattern).tokens()
+
+class _TinyRELexerFor():
     def __init__(self, pattern):
         self.__pattern = pattern
         self.__tokens = []
@@ -47,8 +51,18 @@ class TinyRELexer():
             self.__handle_gobble_char(c)
 
     def __check_state(self):
-        if self.__state != START:
-            raise Exception()
+        if self.__state == GOBBLE_CHAR :
+            raise Exception("Bad state: expected START ({0}) or AFTER_CHAR ({1}), was {2} ({3})".format(
+                START, AFTER_CHAR, self.__get_state_name(), self.__state))
+
+    def __get_state_name(self):
+        if self.__state == AFTER_CHAR:
+            state_name = "AFTER_CHAR"
+        elif self.__state == GOBBLE_CHAR:
+            state_name = "GOBBLE_CHAR"
+        else:
+            state_name = "UNKNOWN"
+        return state_name
 
     def __handle_start(self, c):
         if c == '.':
