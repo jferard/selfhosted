@@ -20,6 +20,7 @@ from py_tinyre.constants import *
 
 class TinyREParser():
     def parse(self, tokens):
+        """Return nodes"""
         return _TinyREParserFor(tokens).nodes()
 
 class _TinyREParserFor():
@@ -28,7 +29,7 @@ class _TinyREParserFor():
 
     def nodes(self):
         self.__i = 0
-        self.__l = []
+        self.__nodes = []
         while self.__i+1<len(self.__tokens):
             token = self.__tokens[self.__i]
             next_token = self.__tokens[self.__i+1]
@@ -38,7 +39,7 @@ class _TinyREParserFor():
             self.__i += 1
 
         self.__try_parse_last()
-        return self.__l
+        return self.__nodes
 
     def __check_first_token(self, token):
         if token[OP_CODE] == GLOB:
@@ -48,19 +49,19 @@ class _TinyREParserFor():
         if next_token[OP_CODE] == GLOB:
             self.__parse_glob(token, next_token)
         else:
-            self.__l.append((ONE, token))
+            self.__nodes.append((ONE, token))
 
     def __parse_glob(self, token, next_token):
         if next_token[VALUE] == '+':
-            self.__l.append((ONE_OR_MORE, token))
+            self.__nodes.append((ONE_OR_MORE, token))
         elif next_token[VALUE] == '*':
-            self.__l.append((ZERO_OR_MORE, token))
+            self.__nodes.append((ZERO_OR_MORE, token))
         elif next_token[VALUE] == '?':
-            self.__l.append((ZERO_OR_ONE, token))
+            self.__nodes.append((ZERO_OR_ONE, token))
         self.__i += 1 # gobble glob
 
     def __try_parse_last(self):
         if self.__i<len(self.__tokens):
             token = self.__tokens[self.__i]
             self.__check_first_token(token)
-            self.__l.append((ONE, token))
+            self.__nodes.append((ONE, token))

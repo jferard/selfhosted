@@ -27,16 +27,17 @@ class TestTinyREMatcher(unittest.TestCase):
     def testOneOK(self):
         matchers = [OneMatcher(CharCollectionMatcher([(ONE_CHAR, "a")]))]
         t = TinyREMatcher(matchers)
-        self.assertEquals(SUCCESS, t.accept("a"))
+        self.assertEquals(NEXT_CHAR, t.accept("a"))
+        self.assertEquals(SUCCESS, t.accept("\0"))
 
     def testOneOK2(self):
         matchers = [
             OneMatcher(CharCollectionMatcher([(ONE_CHAR, l)])) for l in "pattern"
         ]
         t = TinyREMatcher(matchers)
-        for l in "patter":
+        for l in "pattern":
             self.assertEquals(NEXT_CHAR, t.accept(l))
-        self.assertEquals(SUCCESS, t.accept("n"))
+        self.assertEquals(SUCCESS, t.accept("\0"))
 
 
     def testOneFail(self):

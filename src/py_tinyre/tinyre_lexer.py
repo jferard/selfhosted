@@ -20,6 +20,11 @@ from py_tinyre.constants import *
 
 class TinyRELexer():
     def tokenize(self, pattern):
+        """Return tokens from pattern
+The possible tokens are:
+(ANY_CHAR, '\0')
+(CHAR_COLLECTION, <a collection>)
+(GLOB, +|?|*)"""
         return _TinyRELexerFor(pattern).tokens()
 
 class _TinyRELexerFor():
@@ -28,6 +33,7 @@ class _TinyRELexerFor():
         self.__tokens = []
 
     def tokens(self):
+        """Return tokens"""
         self.__prepare()
         while self.__i<len(self.__pattern):
             c = self.__pattern[self.__i]
@@ -56,6 +62,7 @@ class _TinyRELexerFor():
                 START, AFTER_CHAR, self.__get_state_name(), self.__state))
 
     def __get_state_name(self):
+        """For debbuging"""
         if self.__state == AFTER_CHAR:
             state_name = "AFTER_CHAR"
         elif self.__state == GOBBLE_CHAR:

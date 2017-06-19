@@ -11,6 +11,11 @@ I will try to make a tiny self hosted compiler, one part after another.
 The goal is to create in Python a compiler based on LLVM.
 This compiler should be able to compile itself.
 
+The only requirements will be:
+- LLVM
+- a python 3 interpreteter
+- the C standard library
+
 ## Roadmap
 There are two main steps : the bootstrap in Python, and the self hosted compiler.
 

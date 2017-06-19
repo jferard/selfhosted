@@ -24,7 +24,8 @@ from py_tinyre.constants import *
 
 class TinyRE():
    def __init__(self, pattern):
-       matchers = TinyRECompiler().compile(TinyREParser().parse(TinyRELexer().tokenize(pattern)))
+       pattern_tokens = TinyRELexer().tokenize(pattern)
+       matchers = TinyRECompiler().compile(TinyREParser().parse(pattern_tokens))
        self.__matcher = TinyREMatcher(matchers)
 
    def accept(self, c):

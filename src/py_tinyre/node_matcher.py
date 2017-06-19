@@ -36,7 +36,7 @@ class ZeroOrMoreMatcher():
         if self.__token_matcher.match(c):
             return NEXT_CHAR
         else:
-            return SKIP_MATCHER
+            return NEXT_MATCHER
 
 class ZeroOrOneMatcher():
     def __init__(self, token_matcher):
@@ -46,7 +46,7 @@ class ZeroOrOneMatcher():
         if self.__token_matcher.match(c):
             return NEXT_CHAR_AND_MATCHER
         else:
-            return SKIP_MATCHER
+            return NEXT_MATCHER
 
 class OneOrMoreMatcher():
     def __init__(self, token_matcher):
@@ -64,4 +64,4 @@ class OneOrMoreMatcher():
             if self.__token_matcher.match(c):
                 return NEXT_CHAR
             else:
-                return SKIP_MATCHER
+                return NEXT_MATCHER

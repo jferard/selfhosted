@@ -34,18 +34,18 @@ class TestNodeMatcher(unittest.TestCase):
     def testZeroOrMore(self):
         m = ZeroOrMoreMatcher(CharCollectionMatcher([(ONE_CHAR, "a")]))
         self.assertEquals(NEXT_CHAR, m.accept('a'))
-        self.assertEquals(SKIP_MATCHER, m.accept('b'))
+        self.assertEquals(NEXT_MATCHER, m.accept('b'))
 
     def testZeroOrMore2(self):
         m = ZeroOrMoreMatcher(CharCollectionMatcher([(ONE_CHAR, "a")]))
-        self.assertEquals(SKIP_MATCHER, m.accept('b'))
+        self.assertEquals(NEXT_MATCHER, m.accept('b'))
 
     def testZeroOrMore3(self):
         m = ZeroOrMoreMatcher(CharCollectionMatcher([(ONE_CHAR, "a")]))
         self.assertEquals(NEXT_CHAR, m.accept('a'))
         self.assertEquals(NEXT_CHAR, m.accept('a'))
         self.assertEquals(NEXT_CHAR, m.accept('a'))
-        self.assertEquals(SKIP_MATCHER, m.accept('b'))
+        self.assertEquals(NEXT_MATCHER, m.accept('b'))
 
     def testOneOrMore(self):
         m = OneOrMoreMatcher(CharCollectionMatcher([(ONE_CHAR, "a")]))
@@ -54,14 +54,14 @@ class TestNodeMatcher(unittest.TestCase):
     def testOneOrMore2(self):
         m = OneOrMoreMatcher(CharCollectionMatcher([(ONE_CHAR, "a")]))
         self.assertEquals(NEXT_CHAR, m.accept('a'))
-        self.assertEquals(SKIP_MATCHER, m.accept('b'))
+        self.assertEquals(NEXT_MATCHER, m.accept('b'))
 
     def testOneOrMore3(self):
         m = OneOrMoreMatcher(CharCollectionMatcher([(ONE_CHAR, "a")]))
         self.assertEquals(NEXT_CHAR, m.accept('a'))
         self.assertEquals(NEXT_CHAR, m.accept('a'))
         self.assertEquals(NEXT_CHAR, m.accept('a'))
-        self.assertEquals(SKIP_MATCHER, m.accept('b'))
+        self.assertEquals(NEXT_MATCHER, m.accept('b'))
 
 
 if __name__ == '__main__':

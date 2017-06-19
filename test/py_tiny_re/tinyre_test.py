@@ -22,7 +22,7 @@ from py_tinyre.constants import *
 from py_tinyre import *
 
 class TestTinyRE(unittest.TestCase):
-    def test(self):
+    def testPattern(self):
         re = TinyRE("[p][a][t][t][e][r][n]")
         self.assertEquals(NEXT_CHAR, re.accept("p"))
         self.assertEquals(NEXT_CHAR, re.accept("a"))
@@ -30,7 +30,25 @@ class TestTinyRE(unittest.TestCase):
         self.assertEquals(NEXT_CHAR, re.accept("t"))
         self.assertEquals(NEXT_CHAR, re.accept("e"))
         self.assertEquals(NEXT_CHAR, re.accept("r"))
-        self.assertEquals(SUCCESS, re.accept("n"))
+        self.assertEquals(NEXT_CHAR, re.accept("n"))
+        self.assertEquals(SUCCESS, re.accept("\0"))
+
+    def testPattern2(self):
+        re = TinyRE("[p][a][t][t][e][r][n]")
+        self.assertEquals(NEXT_CHAR, re.accept("p"))
+        self.assertEquals(NEXT_CHAR, re.accept("a"))
+        self.assertEquals(NEXT_CHAR, re.accept("t"))
+        self.assertEquals(FAIL, re.accept("s"))
+
+    def testPatternPlus(self):
+        re = TinyRE("[p][a][t]+")
+        self.assertEquals(NEXT_CHAR, re.accept("p"))
+        self.assertEquals(NEXT_CHAR, re.accept("a"))
+        self.assertEquals(NEXT_CHAR, re.accept("t"))
+        self.assertEquals(NEXT_CHAR, re.accept("t"))
+        self.assertEquals(NEXT_CHAR, re.accept("t"))
+        self.assertEquals(NEXT_CHAR, re.accept("t"))
+        self.assertEquals(SUCCESS, re.accept("e"))
 
 if __name__ == '__main__':
     unittest.main()

@@ -24,9 +24,16 @@ class TinyREMatcher():
         self.__i = 0
 
     def accept(self, c):
+        """Returns
+        NEXT_CHAR if the char was accepted
+        FAIL if the current char was refused, and the pattern is not complete
+        SUCCESS if the current char was refused, but the pattern is complete"""
+        if self.__i == len(self.__matchers):
+            return SUCCESS
+
         cur_matcher = self.__matchers[self.__i]
         state = cur_matcher.accept(c)
-        while state == SKIP_MATCHER:
+        while state == NEXT_MATCHER:
             self.__i += 1
             if self.__i == len(self.__matchers):
                 return SUCCESS
@@ -37,7 +44,5 @@ class TinyREMatcher():
             return FAIL
         if state == NEXT_MATCHER_AND_CHAR:
             self.__i += 1
-            if self.__i == len(self.__matchers):
-                return SUCCESS
 
         return NEXT_CHAR
