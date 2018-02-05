@@ -14,7 +14,7 @@ This compiler should be able to compile itself.
 The only requirements will be:
 - LLVM
 - a python 3 interpreteter
-- the C standard library
+- python llvmlite module
 
 ## Roadmap
 There are two main steps : the bootstrap in Python, and the self hosted compiler.
@@ -28,3 +28,5 @@ There are two main steps : the bootstrap in Python, and the self hosted compiler
 ### The self hosted compiler
 1. Translate Python sources to self hosted syntax.
 2. Tie this to LLVM
+
+See https://github.com/jferard/selfhosted/ROADMAP.md
